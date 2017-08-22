@@ -64,10 +64,10 @@ class ChooseCategoryDialog extends Component {
                         contentContainerStyle={styles.scrollViewContainer}>
                         {this.state.res.map((row) => (
                             <TouchableOpacity key={row._id} onPress={() => {
+                                this.props.handleDialog();
                                 this.setState({category: row});
                                 console.log('categoryId = ', this.state.category._id);
                                 this.props.callback(row._id, this.props.chargeId);
-
                                 this.setState({basicScrolledListVisible: false});
                             }}>
                                 <View style={styles.row}>
