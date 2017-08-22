@@ -8,6 +8,7 @@ import EventEmitter from "./src/EventEmitter";
 import dao from "./src/dao";
 import iconSum from "./src/images/icon_summ.png";
 import NecessityIcon from "./src/NecessityIcon";
+import ChooseCategoryDialog from "./src/ChooseCategoryDialog";
 
 
 window.ee = new EventEmitter();
@@ -25,7 +26,9 @@ export default class money_box extends Component {
         this.state = {
             dataSource: ds.cloneWithRowsAndSections([]),
             showForm: false,
+            needToShowDialog: false,
         };
+
         dao.selectFromCharge();
     }
 
@@ -81,7 +84,10 @@ export default class money_box extends Component {
         return sum;
     };
 
-    renderRow(record) {
+    handleDialog = () => {
+        this.setState({needToShowDialog: !this.state.needToShowDialog});
+    };
+    renderRow = (record) => {
         return (
             <View style={styles.row}>
                 <View style={{flex: 1}}>
@@ -92,7 +98,9 @@ export default class money_box extends Component {
                     <NecessityIcon isRequired={record.required}
                                    callback={(required) => dao.updateCategoryRequired(required, record._id)}/>
                     <TouchableOpacity style={styles.button} onPress={() => {
-                        console.log("categoryName pressed")
+                        this.handleDialog();
+                        console.log("bool = ", this.state.needToShowDialog);
+
                     }}>
                         <Text style={styles.id}>{record.categoryName}</Text>
                     </TouchableOpacity>
@@ -129,6 +137,8 @@ export default class money_box extends Component {
                             onPress={() => {
                                 self.changeShowForm()
                             }}/>
+                        {this.state.needToShowDialog ? (<ChooseCategoryDialog handleDialog={()=>this.handleDialog()}/>) : (<Text/>)}
+
                     </View>
                 )}
 
