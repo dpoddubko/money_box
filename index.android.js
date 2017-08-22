@@ -16,6 +16,7 @@ export default class money_box extends Component {
 
     constructor(props) {
         super(props);
+        dao.initDB();
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2,
             sectionHeaderHasChanged: (s1, s2) => s1 !== s2
