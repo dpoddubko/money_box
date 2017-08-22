@@ -27,6 +27,7 @@ export default class money_box extends Component {
             dataSource: ds.cloneWithRowsAndSections([]),
             showForm: false,
             needToShowDialog: false,
+            chargeId: 0,
         };
 
         dao.selectFromCharge();
@@ -99,6 +100,7 @@ export default class money_box extends Component {
                                    callback={(required) => dao.updateCategoryRequired(required, record._id)}/>
                     <TouchableOpacity style={styles.button} onPress={() => {
                         this.handleDialog();
+                        this.setState({chargeId: record._id});
                         console.log("bool = ", this.state.needToShowDialog);
 
                     }}>
@@ -137,7 +139,12 @@ export default class money_box extends Component {
                             onPress={() => {
                                 self.changeShowForm()
                             }}/>
-                        {this.state.needToShowDialog ? (<ChooseCategoryDialog handleDialog={()=>this.handleDialog()}/>) : (<Text/>)}
+                        {this.state.needToShowDialog ? (
+                            <ChooseCategoryDialog handleDialog={() => this.handleDialog()}
+                                                  chargeId={this.state.chargeId}
+                                                  callback={(categoryId, chargeId) =>
+                                                      dao.updateCategoryOfCharge(categoryId, chargeId)}/>)
+                            : (<Text/>)}
 
                     </View>
                 )}

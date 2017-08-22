@@ -56,7 +56,14 @@ export default {
         });
     },
 
-
+    updateCategoryOfCharge(categoryId, chargeId) {
+        db.executeSql("UPDATE Charge SET categoryId=? WHERE _id=?", [categoryId, chargeId], (res) => {
+            console.log(`UPDATE_CATEGORY_OF_CHARGE categoryId=${categoryId}, chargeId = ${chargeId}`);
+            this.selectFromCharge();
+        }, (e) => {
+            console.log("ERROR insertCharge: " + e.message);
+        });
+    },
     selectFromCategoryById(id) {
         db.executeSql(
             'SELECT * FROM Category WHERE _id=(?)', [id], (res) => {
