@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {AppRegistry, Image, ListView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import Form from "./src/form";
+import AddNewCharge from "./src/AddNewCharge";
 import ActionButton from "react-native-action-button";
 import AppDispatcher from "./src/AppDispatcher";
 import Constants from "./src/Constants";
@@ -118,7 +118,7 @@ export default class money_box extends Component {
         return (
             <View style={styles.container}>
                 {showForm ? (
-                    <Form isRequired={false} call={() => {
+                    <AddNewCharge isRequired={false} call={() => {
                         self.changeShowForm()
                     }}/>
                 ) : (
@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
-        // alignItems: 'flex-start',
         backgroundColor: '#F5FCFF',
         padding: 10
     },

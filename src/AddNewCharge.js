@@ -1,13 +1,16 @@
 import React, {Component} from "react";
 import {Alert, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
-import {FormLabel, Header, Icon} from "react-native-elements";
+import {FormLabel} from "react-native-elements";
 import dao from "./dao";
 import DatePicker from "react-native-datepicker";
 import Moment from "moment";
 import NecessityIcon from "./NecessityIcon";
 import ChooseCategoryDialog from "./ChooseCategoryDialog";
+import Constants from "./Constants";
+import AppDispatcher from "./AppDispatcher";
+import AppHeader from "./AppHeader";
 
-class Form extends Component {
+class AddNewCharge extends Component {
     constructor(props) {
         super(props);
         dao.selectFromCategoryById(1);
@@ -28,6 +31,12 @@ class Form extends Component {
 
         };
     }
+
+    componentDidMount() {
+        window.ee.addListener(Constants.ACTION_UPDATE_CHOSEN_CATEGORY, (category) => {
+            this.setState({category: category});
+        });
+    };
 
     getDate = () => {
         Moment.locale('en');
@@ -83,33 +92,22 @@ class Form extends Component {
 
     handleDialog = () => {
         this.setState({needToShowDialog: !this.state.needToShowDialog});
-    };//?/??
+    };
+
     render() {
         let self = this;
 
         return (
             <View style={styles.container}>
 
-                {/*dsytcnb header в компонент */}
-                <Header
-                    leftComponent={
-                        <Icon
-                            name='arrow-left'
-                            type='material-community'
-                            color='white'
-                            reverseColor='red'
-                            onPress={() => this.props.call()}/>}
-                    centerComponent={{text: 'NEW CHARGE', style: {color: '#fff'}}}
-                    rightComponent={
-                        <Icon
-                            name='save'
-                            type='font-awesome'
-                            color='white'
-                            reverseColor='red'
-                            onPress={() => this.save()}/>
-                    }
-                    backgroundColor='blue'
-                />
+                <AppHeader
+                    title="NEW CHARGE"
+                    leftName="arrow-left"
+                    leftType="material-community"
+                    leftCallback={() => this.props.call()}
+                    rightName="save"
+                    rightType="font-awesome"
+                    rightCallback={() => this.save()}/>
 
                 <View style={styles.container1}>
                     <FormLabel>Name</FormLabel>
@@ -167,7 +165,6 @@ class Form extends Component {
                     </TouchableOpacity>
 
                 </View>
-                {/*вынести диалог в компонент  this.setState({category: row});*/}
                 {this.state.needToShowDialog ? (
                     <ChooseCategoryDialog handleDialog={() => this.handleDialog()}
                                           callback={(category) => this.setState({category: category})}/>) : (<Text/>)}
@@ -176,6 +173,17 @@ class Form extends Component {
         );
     }
 }
+
+AppDispatcher.register(action => {
+    switch (action.type) {
+        case Constants.ACTION_UPDATE_CHOSEN_CATEGORY: {
+            window.ee.emit(Constants.ACTION_UPDATE_CHOSEN_CATEGORY, action.newCategory);
+            break;
+        }
+        default: {
+        }
+    }
+});
 
 const styles = StyleSheet.create({
     container: {
@@ -226,4 +234,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Form;
+export default AddNewCharge;
