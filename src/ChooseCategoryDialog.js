@@ -13,16 +13,9 @@ class ChooseCategoryDialog extends Component {
         super(props);
         dao.selectFromCategoryDialog();
         this.state = {
-            isRequired: this.props.isRequired,
             basicScrolledListVisible: true,
-            res: [],
-            category: {
-                createdAt: '2017-08-16 13:03:18',
-                required: 0,
-                name: 'Default',
-                _id: 1
-            },
             basicOkCancelVisible: false,
+            res: [],
             newCategoryName: '',
             text: '',
         };
@@ -34,9 +27,7 @@ class ChooseCategoryDialog extends Component {
         });
         window.ee.addListener(NEW_CATEGORY, (res) => {
             console.log("NEW_CATEGORY componentDidMount form: " + JSON.stringify(res));
-            this.setState({category: res});
-            console.log('this.state.category._id =' + this.state.category._id, 'this.props.chargeId=' + this.props.chargeId)
-            this.props.callback(res._id, this.props.chargeId);
+            this.props.callback(res);
         });
     };
 
@@ -65,9 +56,7 @@ class ChooseCategoryDialog extends Component {
                         {this.state.res.map((row) => (
                             <TouchableOpacity key={row._id} onPress={() => {
                                 this.props.handleDialog();
-                                this.setState({category: row});
-                                console.log('categoryId = ', this.state.category._id);
-                                this.props.callback(row._id, this.props.chargeId);
+                                this.props.callback(row);
                                 this.setState({basicScrolledListVisible: false});
                             }}>
                                 <View style={styles.row}>
@@ -86,7 +75,7 @@ class ChooseCategoryDialog extends Component {
 
                         let categoryName = this.state.newCategoryName;
                         if (categoryName !== '') {
-                            dao.insertCategory(categoryName);
+                            dao.insertCategory(categoryName);//вызовет потом action ACTION_UPDATE_CHOSEN_CATEGORY
                             this.clearInput('inputCategory');
                             this.setState({newCategoryName: ''});
                         }

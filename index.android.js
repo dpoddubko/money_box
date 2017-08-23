@@ -141,9 +141,8 @@ export default class money_box extends Component {
                             }}/>
                         {this.state.needToShowDialog ? (
                             <ChooseCategoryDialog handleDialog={() => this.handleDialog()}
-                                                  chargeId={this.state.chargeId}
-                                                  callback={(categoryId, chargeId) =>
-                                                      dao.updateCategoryOfCharge(categoryId, chargeId)}/>)
+                                                  callback={(category) =>
+                                                      dao.updateCategoryOfCharge(category._id, this.state.chargeId)}/>)
                             : (<Text/>)}
 
                     </View>
