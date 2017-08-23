@@ -1,5 +1,7 @@
 import Sqlite from "react-native-sqlite-storage";
 import schema from "./querys/schema";
+import AllCategories from "./querys/AllCategoriesByFrequencyWithAdditionalKeys";
+
 import AppDispatcher from "./AppDispatcher";
 import AppConstants from "./AppConstants";
 
@@ -100,4 +102,10 @@ export default {
                 console.log("ERROR ACTION_SHOW_CATEGORIES: " + e.message);
             });
     },
+    AllCategoriesByFrequencyWithAdditionalKeys(){
+        db.executeSql(AllCategories.getAllCategoriesByFrequencyWithAdditionalKeys(),[],(res)=>{
+            
+        })
+
+    }
 }

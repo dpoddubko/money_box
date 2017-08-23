@@ -13,7 +13,6 @@ const CATEGORIES = "action_show_categories";
 const NEW_CATEGORY = "new_category";
 
 class Form extends Component {
-//data piker + Necessity доделать
     constructor(props) {
         super(props);
         dao.selectFromCategory();
@@ -226,7 +225,6 @@ class Form extends Component {
                             dao.insertCategory(categoryName);
                             this.clearInput('inputCategory');
                             this.setState({newCategoryName: ''});
-                            //записать в category только что вставленный объект newCategoryName
                         }
                     }}
                     onCancel={() => {
