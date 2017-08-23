@@ -2,13 +2,13 @@ import React, {Component} from "react";
 import {Alert, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {FormLabel} from "react-native-elements";
 import dao from "./dao";
-import DatePicker from "react-native-datepicker";
-import Moment from "moment";
 import NecessityIcon from "./NecessityIcon";
 import ChooseCategoryDialog from "./ChooseCategoryDialog";
 import Constants from "./Constants";
 import AppDispatcher from "./AppDispatcher";
 import AppHeader from "./AppHeader";
+import CalendarPicker from "./CalendarPicker";
+import currentDate from './currentDate'
 
 class AddNewCharge extends Component {
     constructor(props) {
@@ -26,7 +26,7 @@ class AddNewCharge extends Component {
                 name: 'Default',
                 _id: 1
             },
-            date: this.getDate(),
+            date: currentDate.getDate(),
             needToShowDialog: false,
 
         };
@@ -38,11 +38,6 @@ class AddNewCharge extends Component {
         });
     };
 
-    getDate = () => {
-        Moment.locale('en');
-        var dt = new Date();
-        return Moment(dt).format('YYYY-MM-DD');
-    };
     save = () => {
         this.saveAndContinue();
         if (this.conditions()) {
@@ -130,31 +125,9 @@ class AddNewCharge extends Component {
                     </TouchableOpacity>
 
                     <FormLabel>Date</FormLabel>
-                    <DatePicker
-                        style={{width: 200}}
-                        date={this.state.date}
-                        mode="date"
-                        placeholder="select date"
-                        format="YYYY-MM-DD"
-                        minDate="2016-05-01"
-                        maxDate="2030-06-01"
-                        confirmBtnText="Confirm"
-                        cancelBtnText="Cancel"
-                        customStyles={{
-                            dateIcon: {
-                                position: 'absolute',
-                                left: 0,
-                                top: 4,
-                                marginLeft: 15
-                            },
-                            dateInput: {
-                                marginLeft: 50
-                            }
-                        }}
-                        onDateChange={(date) => {
-                            this.setState({date: date})
-                        }}
-                    />
+
+                    <CalendarPicker
+                        callback={(date) => this.setState({date: date})}/>
 
                     <View style={styles.row}>
                         <FormLabel>Necessity</FormLabel>
