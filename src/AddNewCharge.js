@@ -8,7 +8,7 @@ import Constants from "./Constants";
 import AppDispatcher from "./AppDispatcher";
 import AppHeader from "./AppHeader";
 import CalendarPicker from "./CalendarPicker";
-import currentDate from './currentDate'
+import currentDate from "./currentDate";
 
 class AddNewCharge extends Component {
     constructor(props) {
@@ -44,13 +44,15 @@ class AddNewCharge extends Component {
             this.props.call();
         }
     };
+    
     saveAndContinue = () => {
         if (this.conditions()) {
             this.clearInput('inputName');
             this.clearInput('inputPrice');
             this.clearPrice();
             this.clearName();
-            dao.insertCharge(this.state.name, this.state.price, this.state.category._id, this.getRequired(), this.state.date);
+            dao.insertCharge(this.state.name, this.state.price, this.state.category._id,
+                this.getRequired(), this.state.date);
         } else {
             this.dialog('Input data to first and second fields');
         }
@@ -104,7 +106,7 @@ class AddNewCharge extends Component {
                     rightType="font-awesome"
                     rightCallback={() => this.save()}/>
 
-                <View style={styles.container1}>
+                <View style={styles.subContainer}>
                     <FormLabel>Name</FormLabel>
                     <TextInput style={styles.welcome}
                                ref={'inputName'}
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
     },
-    container1: {
+    subContainer: {
         flex: 1,
         justifyContent: 'flex-start',
         marginTop: 100
@@ -173,14 +175,6 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         margin: 10,
         paddingLeft: 10
-    },
-    welcome1: {
-        flex: 0,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
     },
     button: {
         backgroundColor: 'mediumslateblue',
@@ -201,10 +195,6 @@ const styles = StyleSheet.create({
         marginRight: 15,
         paddingBottom: 5,
     },
-    scrollViewContainer: {
-        paddingTop: 8,
-    },
-
 });
 
 export default AddNewCharge;
