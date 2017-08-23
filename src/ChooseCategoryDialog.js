@@ -3,10 +3,7 @@ import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "r
 import dao from "./dao";
 import {MaterialDialog} from "react-native-material-dialog";
 import AppDispatcher from "./AppDispatcher";
-import AppConstants from "./AppConstants";
-
-const CATEGORIES_DIALOG = "action_show_categories";
-const NEW_CATEGORY = "new_category";
+import Constants from "./Constants";
 
 class ChooseCategoryDialog extends Component {
     constructor(props) {
@@ -22,11 +19,10 @@ class ChooseCategoryDialog extends Component {
     }
 
     componentDidMount() {
-        window.ee.addListener(CATEGORIES_DIALOG, (res) => {
+        window.ee.addListener(Constants.ACTION_SHOW_CATEGORIES, (res) => {
             this.setState({res: res});
         });
-        window.ee.addListener(NEW_CATEGORY, (res) => {
-            console.log("NEW_CATEGORY componentDidMount form: " + JSON.stringify(res));
+        window.ee.addListener(Constants.ACTION_UPDATE_CHOSEN_CATEGORY, (res) => {
             this.props.callback(res);
         });
     };
@@ -75,7 +71,7 @@ class ChooseCategoryDialog extends Component {
 
                         let categoryName = this.state.newCategoryName;
                         if (categoryName !== '') {
-                            dao.insertCategory(categoryName);//вызовет потом action ACTION_UPDATE_CHOSEN_CATEGORY
+                            dao.insertCategory(categoryName);//вызовет потом action ACTION_UPDATE_CHOSEN_CATEGORY,NEW_CATEGORY
                             this.clearInput('inputCategory');
                             this.setState({newCategoryName: ''});
                         }
@@ -119,14 +115,14 @@ const styles = StyleSheet.create({
 AppDispatcher.register(action => {
 
     switch (action.type) {
-        case AppConstants.ACTION_SHOW_CATEGORIES_DIALOG: {
-            console.log("ACTION_SHOW_CATEGORIES_DIALOG: " + action.res);
-            window.ee.emit(CATEGORIES_DIALOG, action.res);
+        case Constants.ACTION_SHOW_CATEGORIES: {
+            console.log("ACTION_SHOW_CATEGORIES: " + action.res);
+            window.ee.emit(Constants.ACTION_SHOW_CATEGORIES, action.res);
             break;
         }
-        case AppConstants.ACTION_UPDATE_CHOSEN_CATEGORY: {
-            console.log(" AppDispatcher ACTION_UPDATE_CHOSEN_CATEGORY: " + action.newCategory);
-            window.ee.emit(NEW_CATEGORY, action.newCategory);
+        case Constants.ACTION_UPDATE_CHOSEN_CATEGORY: {
+            console.log(" AppDispatcher ACTION_UPDATE_CHOSEN_CATEGORY: " + action.newCategory,Constants.ACTION_UPDATE_CHOSEN_CATEGORY);
+            window.ee.emit(Constants.ACTION_UPDATE_CHOSEN_CATEGORY, action.newCategory);
             break;
         }
         default: {

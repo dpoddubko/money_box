@@ -1,37 +1,30 @@
 import React, {Component} from "react";
-import {Alert, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView} from "react-native";
-import {FormLabel, Icon, Header} from "react-native-elements";
+import {Alert, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {FormLabel, Header, Icon} from "react-native-elements";
 import dao from "./dao";
-import {MaterialDialog} from 'react-native-material-dialog';
-import AppDispatcher from "./AppDispatcher";
-import AppConstants from "./AppConstants";
-import DatePicker from 'react-native-datepicker'
-import Moment from 'moment';
+import DatePicker from "react-native-datepicker";
+import Moment from "moment";
 import NecessityIcon from "./NecessityIcon";
-
-const CATEGORIES = "action_show_categories";
-const NEW_CATEGORY = "new_category";
+import ChooseCategoryDialog from "./ChooseCategoryDialog";
 
 class Form extends Component {
     constructor(props) {
         super(props);
-        dao.selectFromCategory();
         dao.selectFromCategoryById(1);
         this.state = {
             name: '',
             price: 0,
             isRequired: this.props.isRequired,
             basicScrolledListVisible: false,
-            res: [],
+            basicOkCancelVisible: false,
             category: {
                 createdAt: '2017-08-16 13:03:18',
                 required: 0,
                 name: 'Default',
                 _id: 1
             },
-            basicOkCancelVisible: false,
-            newCategoryName: '',
             date: this.getDate(),
+            needToShowDialog: false,
 
         };
     }
@@ -88,21 +81,9 @@ class Form extends Component {
         return (this.state.isRequired ? 1 : 0);
     };
 
-    handleCategoryClick = () => {
-        this.setState({basicScrolledListVisible: true});
-    };
-
-    componentDidMount() {
-        window.ee.addListener(CATEGORIES, (res) => {
-            console.log("CATEGORIES componentDidMount form: " + res);
-            this.setState({res: res});
-        });
-        window.ee.addListener(NEW_CATEGORY, (res) => {
-            console.log("NEW_CATEGORY componentDidMount form: " + JSON.stringify(res));
-            this.setState({category: res});
-        });
-    }
-
+    handleDialog = () => {
+        this.setState({needToShowDialog: !this.state.needToShowDialog});
+    };//?/??
     render() {
         let self = this;
 
@@ -146,7 +127,7 @@ class Form extends Component {
                     <FormLabel>Category</FormLabel>
 
                     <TouchableOpacity style={styles.touchable}
-                                      onPress={() => this.handleCategoryClick()}>
+                                      onPress={() => this.handleDialog()}>
                         <Text style={styles.welcome}>{this.state.category.name}</Text>
                     </TouchableOpacity>
 
@@ -186,55 +167,11 @@ class Form extends Component {
                     </TouchableOpacity>
 
                 </View>
-                {/*вынести диалог в компонент  */}
-                <MaterialDialog
-                    visible={this.state.basicScrolledListVisible}
-                    // title={'Categories list'}
-                    scrolled
-                    cancelLabel={'All categories'}
-                    okLabel={'Create category'}
-                    onOk={() => {
-                        this.setState({basicScrolledListVisible: false});
-                        this.setState({basicOkCancelVisible: true});
-                    }}
-                    onCancel={() => {
-                        this.setState({basicScrolledListVisible: false});
-                    }}>
-                    <ScrollView
-                        contentContainerStyle={styles.scrollViewContainer}>
-                        {this.state.res.map((row) => (
-                            <TouchableOpacity key={row._id} onPress={() => {
-                                this.setState({category: row});
-                                console.log('categoryId = ', this.state.category._id);
-                                this.setState({basicScrolledListVisible: false});
-                            }}>
-                                <View style={styles.row}>
-                                    <Text style={styles.welcome}>{row.name}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-                </MaterialDialog>
-                <MaterialDialog
-                    title={"Create new category"}
-                    visible={this.state.basicOkCancelVisible}
-                    onOk={() => {
-                        this.setState({basicOkCancelVisible: false});
-                        let categoryName = this.state.newCategoryName;
-                        if (categoryName !== '') {
-                            dao.insertCategory(categoryName);
-                            this.clearInput('inputCategory');
-                            this.setState({newCategoryName: ''});
-                        }
-                    }}
-                    onCancel={() => {
-                        this.setState({basicOkCancelVisible: false});
-                    }}>
-                    <TextInput style={styles.welcome}
-                               ref={'inputCategory'}
-                               placeholder="Input category name"
-                               onChangeText={(newCategoryName) => self.setState({newCategoryName})}/>
-                </MaterialDialog>
+                {/*вынести диалог в компонент  this.setState({category: row});*/}
+                {this.state.needToShowDialog ? (
+                    <ChooseCategoryDialog handleDialog={() => this.handleDialog()}
+                                          callback={(category) => this.setState({category: category})}/>) : (<Text/>)}
+
             </View>
         );
     }
@@ -289,22 +226,4 @@ const styles = StyleSheet.create({
 
 });
 
-AppDispatcher.register(action => {
-
-    switch (action.type) {
-        case AppConstants.ACTION_SHOW_CATEGORIES: {
-            console.log("AppDispatcher ACTION_SHOW_CATEGORIES: " + action.res);
-            window.ee.emit(CATEGORIES, action.res);
-            break;
-        }
-        case AppConstants.ACTION_UPDATE_CHOSEN_CATEGORY: {
-            console.log(" AppDispatcher ACTION_UPDATE_CHOSEN_CATEGORY: " + action.newCategory);
-            window.ee.emit(NEW_CATEGORY, action.newCategory);
-            break;
-        }
-
-        default: {
-        }
-    }
-});
 export default Form;

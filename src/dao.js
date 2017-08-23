@@ -3,7 +3,7 @@ import schema from "./querys/schema";
 import AllCategories from "./querys/AllCategoriesByFrequencyWithAdditionalKeys";
 
 import AppDispatcher from "./AppDispatcher";
-import AppConstants from "./AppConstants";
+import AppConstants from "./Constants";
 
 let db = Sqlite.openDatabase({name: "core.db"});
 
@@ -78,24 +78,12 @@ export default {
             });
     },
 
-    selectFromCategory() {
-        db.executeSql(
-            'SELECT * FROM Category', [], (res) => {
-                console.log("SELECT_FROM_CATEGORY: " + JSON.stringify(res.rows.raw()));
-                AppDispatcher.dispatch({
-                    type: AppConstants.ACTION_SHOW_CATEGORIES,
-                    res: res.rows.raw()
-                });
-            }, (e) => {
-                console.log("ERROR ACTION_SHOW_CATEGORIES: " + e.message);
-            });
-    },
     selectFromCategoryDialog() {
         db.executeSql(
             'SELECT * FROM Category', [], (res) => {
                 console.log("SELECT_FROM_CATEGORY: " + JSON.stringify(res.rows.raw()));
                 AppDispatcher.dispatch({
-                    type: AppConstants.ACTION_SHOW_CATEGORIES_DIALOG,
+                    type: AppConstants.ACTION_SHOW_CATEGORIES,
                     res: res.rows.raw()
                 });
             }, (e) => {

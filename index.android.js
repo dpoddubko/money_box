@@ -3,13 +3,12 @@ import {AppRegistry, Image, ListView, StyleSheet, Text, TouchableOpacity, View} 
 import Form from "./src/form";
 import ActionButton from "react-native-action-button";
 import AppDispatcher from "./src/AppDispatcher";
-import AppConstants from "./src/AppConstants";
+import Constants from "./src/Constants";
 import EventEmitter from "./src/EventEmitter";
 import dao from "./src/dao";
 import iconSum from "./src/images/icon_summ.png";
 import NecessityIcon from "./src/NecessityIcon";
 import ChooseCategoryDialog from "./src/ChooseCategoryDialog";
-
 
 window.ee = new EventEmitter();
 
@@ -156,7 +155,7 @@ export default class money_box extends Component {
 AppDispatcher.register(action => {
 
     switch (action.type) {
-        case AppConstants.ACTION_SHOW_BASE: {
+        case Constants.ACTION_SHOW_BASE: {
             console.log("action.row AppDispatcher: " + action.row);
             window.ee.emit('News.add', action.row);
             break;
