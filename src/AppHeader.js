@@ -16,6 +16,7 @@ class AppHeader extends Component {
                         name={this.props.leftName}
                         type={this.props.leftType}
                         color='white'
+                        underlayColor="lightBlue"
                         onPress={() => this.props.leftCallback()}/>}
                 centerComponent={title}
                 rightComponent={
@@ -23,6 +24,7 @@ class AppHeader extends Component {
                         name={this.props.rightName}
                         type={this.props.rightType}
                         color='white'
+                        underlayColor="lightBlue"
                         onPress={() => this.props.rightCallback()}/>
                 }
                 backgroundColor='blue'

@@ -70,7 +70,7 @@ class ChooseCategoryDialog extends Component {
                         this.setState({basicOkCancelVisible: false});
 
                         let categoryName = this.state.newCategoryName;
-                        if (categoryName !== '') {
+                        if (categoryName !== '' && categoryName !== undefined) {
                             dao.insertCategory(categoryName);//вызовет потом action ACTION_UPDATE_CHOSEN_CATEGORY,NEW_CATEGORY
                             this.clearInput('inputCategory');
                             this.setState({newCategoryName: ''});

@@ -66,6 +66,16 @@ export default {
             console.log("ERROR insertCharge: " + e.message);
         });
     },
+    updateCategoryName(categoryName, categoryId) {
+        db.executeSql("UPDATE Category SET name=? WHERE _id=?", [categoryName, categoryId], (res) => {
+            console.log(`UPDATE_CATEGORY_NAME categoryId=${categoryId}, categoryName = ${categoryName}`);
+            AppDispatcher.dispatch({
+                type: AppConstants.ACTION_CATEGORY_NAME_WAS_UPDATED,
+            });
+        }, (e) => {
+            console.log("ERROR insertCharge: " + e.message);
+        });
+    },
     selectFromCategoryById(id) {
         db.executeSql(
             'SELECT * FROM Category WHERE _id=(?)', [id], (res) => {
@@ -90,9 +100,13 @@ export default {
                 console.log("ERROR ACTION_SHOW_CATEGORIES: " + e.message);
             });
     },
+
     AllCategoriesByFrequencyWithAdditionalKeys(){
-        db.executeSql(AllCategories.getAllCategoriesByFrequencyWithAdditionalKeys(),[],(res)=>{
-            
+        db.executeSql(AllCategories.getAllCategoriesByFrequencyWithAdditionalKeys(), [], (res) => {
+            AppDispatcher.dispatch({
+                type: AppConstants.ACTION_SHOW_ALL_CATEGORIES,
+                res: res.rows.raw()
+            });
         })
 
     }

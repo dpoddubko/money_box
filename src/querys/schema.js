@@ -1,7 +1,8 @@
 export default {
     getSchema(){
         return (
-            `CREATE TABLE IF NOT EXISTS Category (
+            `
+CREATE TABLE IF NOT EXISTS Category (
   _id         INTEGER   PRIMARY KEY  AUTOINCREMENT,
   name        TEXT      NOT NULL     UNIQUE,
   required    INTEGER   NOT NULL     DEFAULT 0,
@@ -19,7 +20,7 @@ CREATE TABLE IF NOT EXISTS Charge (
   createdAt   TEXT      NOT NULL     DEFAULT CURRENT_TIMESTAMP,
   createdDate DATE      NOT NULL     DEFAULT CURRENT_DATE,
 
-  FOREIGN KEY(categoryId) REFERENCES Category(_id) ON DELETE SET DEFAULT
+  FOREIGN KEY(categoryId) REFERENCES Category(_id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS charge_name_index                 ON  Charge(name);
@@ -35,7 +36,10 @@ CREATE TABLE IF NOT EXISTS Income (
   createdDate DATE       NOT NULL     DEFAULT CURRENT_DATE
 );
 
-CREATE INDEX IF NOT EXISTS income_created_date_short_index ON Income(createdDate);`
+CREATE INDEX IF NOT EXISTS income_created_date_short_index ON Income(createdDate);
+
+PRAGMA foreign_keys=ON;
+`
         );
     }
 }
